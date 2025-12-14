@@ -1,0 +1,64 @@
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            StudentInfoScreen()
+        }
+    }
+}
+
+@Composable
+fun StudentInfoScreen() {
+    var selectedIndex by remember { mutableStateOf(0) }
+
+    val names = listOf("Ahmed", "Khalid")
+    val ages = listOf(19, 18,18)
+    val gpas = listOf(4.1, 3.5,2.0)
+
+    Column(modifier = Modifier.padding(20.dp)) {
+
+        Text(
+            text = "Student information",
+            fontSize = 22.sp
+        )
+
+        Spacer(Modifier.height(20.dp))
+
+        Text("Student name: ${names[selectedIndex]}")
+        Text("Age: ${ages[selectedIndex]}")
+        Text("GPA: ${gpas[selectedIndex]}")
+
+        Spacer(Modifier.height(20.dp))
+
+        val img = if (gpas[selectedIndex] < 3.0) R.drawable.fail else R.drawable.pass
+
+        Image(
+            painter = painterResource(id = img),
+            contentDescription = "x",
+            modifier = Modifier.size(150.dp)
+        )
+
+        Spacer(Modifier.height(20.dp))
+
+        val interaction = remember{ MutableInteractionSource(0) }
+val isPressed by interaction.collectIsPressedAsState()
+
+Button(
+    onClick = { },
+    interactionSource = interaction,
+    modifier = Modifier
+        .graphicsLayer(
+            scaleX = if (isPressed) 0.95f else 1f,
+            scaleY = if (isPressed) 0.95f else 1f
+        )
+        .shadow(
+            if (isPressed) 2.dp else 10.dp,
+            shape = RoundedCornerShape(12.dp)
+        )
+) {
+    Text("Next student")
+}
+
+
+
