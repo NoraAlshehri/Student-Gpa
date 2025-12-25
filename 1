@@ -1,0 +1,33 @@
+onNextClick: () -> Unit
+@Composable
+private fun DrawStudentInformationV2(
+    studentName: String,
+    studentAge: Int,
+    studentGpa: Double,
+    imageId: Int,
+    onNextClick: () -> Unit
+)
+
+
+
+Button(
+    onClick = onNextClick,
+    colors = ButtonDefaults.buttonColors(
+        containerColor = Color.Green,
+        contentColor = Color.White
+    )
+) {
+    Text("Next Student")
+}
+
+
+onNextClick = {
+    if (selectedIndex == names.lastIndex) {
+        selectedIndex = 0
+    } else {
+        selectedIndex++
+    }
+}
+
+
+
