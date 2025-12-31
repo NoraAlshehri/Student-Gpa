@@ -157,23 +157,3 @@ fun StudentResultContent(
         onResultChange = {}
     )
 }
-
-
-/*
-TODO - For description content
-first state null: -> done
-    Your exam has not been loaded
-
-Second / third state [random.boolean]: ->
-    false -> Failed_Test
-    true -> Passed_Test
-layout
-    the card has corner -> column -> modifier
-    For card's background color = LightBlue11
-    For description color = Gray1
-
- button is outside the layout
-title:
-    null -> Try again
-    true & false -> Check result
-*/
