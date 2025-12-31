@@ -1,206 +1,204 @@
-package com.example.studentgpa
+package com.example.studentgpa.ui.screens.studentresult
 
-import android.content.Context
-import android.graphics.drawable.ShapeDrawable
-import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.BorderStroke
+import android.app.admin.DevicePolicyResourcesManager
+import android.content.res.Resources
+import android.graphics.Color
+import android.text.style.BackgroundColorSpan
+import androidx.annotation.ColorRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.studentgpa.ui.theme.StudentGPATheme
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
-import androidx.compose.ui.draw.rotate
+import com.example.studentgpa.R
+import com.example.studentgpa.ui.screens.studentInfo.utility.Student
+import com.example.studentgpa.ui.theme.Gray1
+import com.example.studentgpa.ui.theme.LightBlue11
+import kotlin.random.Random
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            DrawStudentInformation()
-
-            DrawStudentInformationV2(
-                studentName = "Ahmed",
-                studentAge = 19,
-                studentGpa = 4.1,
-                imageId = 0,
-//                onNextClick
-            )
-        }
-    }
-}
 
 @Composable
-private fun DrawStudentInformationV2(
-    studentName: String,
-    studentAge: Int,
-    studentGpa: Double,
-    imageId: Int,
-//    onNextClick: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(30.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+fun StudentResultScreen() {
+    var examResult by remember { mutableStateOf<Boolean?>(null) }
+    StudentResultContent(
+        examResult = examResult,
+        onResultChange = { examResult = it }
     )
-    {
-        Text(
-            text = "Student information",
-            fontSize = 30.sp,
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif
-        )
-
-        Spacer(Modifier.height(20.dp))
-
-        Text(
-            "Student's name: $studentName",
-            fontSize = 20.sp,
-            textAlign = TextAlign.Left,
-            fontFamily = FontFamily.Serif,
-            //       onTextLayout =
-        )
-        Text(
-            "Student's age: $studentAge",
-            fontSize = 20.sp,
-            textAlign = TextAlign.Left,
-            fontFamily = FontFamily.Serif,
-            //       onTextLayout =
-        )
-        Text(
-            "Student's GPA: $studentGpa",
-            fontSize = 20.sp,
-            textAlign = TextAlign.Left,
-            fontFamily = FontFamily.Serif
-            //       onTextLayout =
-
-        )
-        Spacer(Modifier.height(20.dp))
-
-        Image(
-            painter = painterResource(id = imageId),
-            contentDescription = "x",
-            modifier = Modifier.size(140.dp)
-        )
-        Spacer(Modifier.height(20.dp))
-        Button(
-            onClick = { /*onNextClick*/ },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Green,
-                contentColor = Color.White
-            )
-        ) {
-            Text("Next Student")
-        }
-
-    }
 }
-
 @Composable
-private fun DrawStudentInformation() {
-    var selectedIndex by remember { mutableStateOf(0) }
-    val names = listOf("Ahmed", "Nasser", "Khalid")
-    val ages = listOf(19, 18, 18)
-    val gpas = listOf(4.1, 3.5, 2.0)
-
-    val img = if (gpas[selectedIndex] > 3.0) R.drawable.pass
-    else
-        R.drawable.failed
-
-    Spacer(Modifier.height(20.dp))
-
-    DrawStudentInformationV2(
-        studentName = names[selectedIndex],
-        studentAge = ages[selectedIndex],
-        studentGpa = gpas[selectedIndex],
-        imageId = img,
-    )
-    Spacer(Modifier.height(40.dp))
-
-
-    // TODO - tobe lambda
-    Spacer(Modifier.height(20.dp))
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    Button(
-        onClick = { // TODO - tobe lambda
-            if (selectedIndex == names.indices.last) {
-                selectedIndex = names.indices.first
-            } else {
-                selectedIndex += 1
-            }
-        },
-
-        interactionSource = interactionSource,
-        modifier = Modifier
-            .graphicsLayer(
-                scaleX = if (isPressed) 0.96f else 1f,
-                scaleY = if (isPressed) 0.96f else 1f
-            )
-            .shadow(
-                if (isPressed) 2.dp else 10.dp,
-                shape = RoundedCornerShape(12.dp)
-            ),
-        shape = RectangleShape,
-        content = {
-            Text(
-                text = "Next Student",
-                fontSize = 22.sp
-            )
-
-        }
-    )
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
+fun StudentResultContent(
+    modifier: Modifier = Modifier,
+    examResult: Boolean?,
+    onResultChange: (Boolean?) -> Unit
 )
-@Composable
-fun GreetingPreview() {
-    StudentGPATheme {
+{
+    Box(
+        modifier = Modifier
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+        ) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(LightBlue11)
+            .padding(36.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+        Text(
+            text = stringResource(R.string.student_result),
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        when (examResult) {
+            null -> {
+                Image(
+                    painter = painterResource(R.drawable.loading_error),
+                    contentDescription = "failed loading",
+                    modifier = Modifier
+                   .padding(bottom = 6.dp)
+                   .size(140.dp)
+                )
+                Text(
+                    text = stringResource(R.string.check_test),
+                    fontSize = 20.sp,
+                    color = Gray1,
+                    modifier = Modifier.padding(12.dp)
+                )
+            }
+
+            true -> {
+                Image(
+                    painter = painterResource(R.drawable.passes),
+                    contentDescription = "Passed",
+                    modifier = Modifier
+                    .padding(bottom = 6.dp)
+                     .size(140.dp)
+                )
+                Text(text = stringResource(R.string.passed_test),
+                    fontSize = 20.sp,
+                    color = androidx.compose.ui.graphics.Color(0xFF82949D),
+                    modifier = Modifier.padding(12.dp)
+                )
+            }
+
+            false -> {
+                Image(
+                    painter = painterResource(R.drawable.fails),
+                    contentDescription = "fail",
+                    modifier = Modifier
+                        .padding(bottom = 6.dp)
+                        .size(140.dp)
+                )
+                Text(
+                    text = stringResource(R.string.failed_test),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    color = androidx.compose.ui.graphics.Color(0xFF82949D),
+                    modifier = Modifier.padding(12.dp)
+                )
+            }
+
+
+        }
+        Button(
+            onClick = {
+                onResultChange(Random.nextBoolean())
+            }
+        ) {
+            Text(
+                text = if (examResult == null) {
+                    "Try again"
+                } else {
+                    "Check result"
+                }
+            )
+        }
     }
+        }
+
 }
+
+
+@Preview()
+@Composable
+ fun StudentResultPreviewInitState() {
+    StudentResultContent(
+        examResult = null,
+        onResultChange = {},
+        modifier = Modifier.padding(20.dp)
+    )
+}
+
+@Preview()
+@Composable
+ fun StudentResultPreviewSuccessState() {
+    StudentResultContent(
+        examResult = true,
+        onResultChange = {}
+    )
+}
+
+@Preview
+@Composable
+ fun StudentResultPreviewFailedState() {
+    StudentResultContent(
+        examResult = false,
+        onResultChange = {}
+    )
+}
+
+
+/*
+TODO - For description content
+first state null: -> done
+    Your exam has not been loaded
+
+Second / third state [random.boolean]: ->
+    false -> Failed_Test
+    true -> Passed_Test
+layout
+    the card has corner -> column -> modifier
+    For card's background color = LightBlue11
+    For description color = Gray1
+
+ button is outside the layout
+title:
+    null -> Try again
+    true & false -> Check result
+*/
